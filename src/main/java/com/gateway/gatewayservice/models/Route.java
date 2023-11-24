@@ -1,10 +1,11 @@
-package com.gateway.gatewayservice;
+package com.gateway.gatewayservice.models;
 
 import lombok.Data;
 
 @Data
 public class Route {
-    private final String routeId;
-    private final String routePrefix;
-    private final String destinationURI;
+    private String routeId;
+    private String routePrefix;
+    private String destinationURI;
+    private AuthCredential credential;
 }

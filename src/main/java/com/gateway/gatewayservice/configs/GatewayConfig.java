@@ -1,10 +1,10 @@
-package com.gateway.gatewayservice;
+package com.gateway.gatewayservice.configs;
 
-import com.gateway.gatewayservice.models.AllRoutes;
 import com.gateway.gatewayservice.models.Auth;
 import com.gateway.gatewayservice.models.AuthCredential;
-import com.gateway.gatewayservice.models.AuthFactory;
-import com.gateway.gatewayservice.models.AuthType;
+import com.gateway.gatewayservice.impl.AuthFactory;
+import com.gateway.gatewayservice.constants.AuthType;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
@@ -12,10 +12,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class GatewayConfig {
-    @Autowired
     private AllRoutes allRoutes;
-    @Autowired
     private AuthFactory authFactory;
 
     @Bean

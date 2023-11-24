@@ -1,5 +1,6 @@
-package com.gateway.gatewayservice.models;
+package com.gateway.gatewayservice.configs;
 
+import com.gateway.gatewayservice.models.Route;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
