@@ -22,13 +22,21 @@ public class GatewayConfig {
         final RouteLocatorBuilder.Builder routeBuilder = builder.routes();
 
         allRoutes.getRouteList().forEach(route -> {
-            routeBuilder.route(route.getRouteId(), r -> r
+            routeBuilder.route(route.getRouteId() + "_post", r -> r
                             .path(String.format("/%s/**", route.getRoutePrefix()))
                             .filters(filter -> filter
                                     .stripPrefix(1)
                                     .addRequestHeader("Authorization", getAuthValues(route.getCredential())
                             )
-                    )
+                    ).method("POST")           
+                    .uri(route.getDestinationURI())
+            ).route(route.getRouteId() + "_get", r -> r
+                            .path(String.format("/%s/**", route.getRoutePrefix()))
+                            .filters(filter -> filter
+                                    .stripPrefix(1)
+                                    .addRequestHeader("Authorization", getAuthValues(route.getCredential())
+                            )
+                    ).method("GET")           
                     .uri(route.getDestinationURI())
             );
         });
