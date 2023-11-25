@@ -4,40 +4,34 @@ import com.gateway.gatewayservice.models.Auth;
 import com.gateway.gatewayservice.models.AuthCredential;
 import com.gateway.gatewayservice.impl.AuthFactory;
 import com.gateway.gatewayservice.constants.AuthType;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class GatewayConfig {
+    @Autowired
     private AllRoutes allRoutes;
+    @Autowired
     private AuthFactory authFactory;
+    @Value("${SECURITY-TOKEN}")
+    private String token;
 
     @Bean
-    public RouteLocator customRouteLocator(final RouteLocatorBuilder builder) {
+    public RouteLocator routeLocatorProvider(final RouteLocatorBuilder builder) {
         final RouteLocatorBuilder.Builder routeBuilder = builder.routes();
 
         allRoutes.getRouteList().forEach(route -> {
-            routeBuilder.route(route.getRouteId() + "_post", r -> r
-                            .path(String.format("/%s/**", route.getRoutePrefix()))
+            routeBuilder.route(route.getRouteId(), r -> r
+                            .path(String.format("/%s/%s/**", token, route.getRoutePrefix()))
                             .filters(filter -> filter
-                                    .stripPrefix(1)
+                                    .stripPrefix(2)
                                     .addRequestHeader("Authorization", getAuthValues(route.getCredential())
                             )
-                    ).method("POST")           
-                    .uri(route.getDestinationURI())
-            ).route(route.getRouteId() + "_get", r -> r
-                            .path(String.format("/%s/**", route.getRoutePrefix()))
-                            .filters(filter -> filter
-                                    .stripPrefix(1)
-                                    .addRequestHeader("Authorization", getAuthValues(route.getCredential())
-                            )
-                    ).method("GET")           
-                    .uri(route.getDestinationURI())
+                    ).uri(route.getDestinationURI())
             );
         });
 
